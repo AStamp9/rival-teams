@@ -2,12 +2,13 @@ const express = require('express')
 const app = express();
 const port = 8081;
 const knex = require('knex')(require('./knexfile.js')["development"])
+app.use(express.json())
 
 app.get('/', (req, res) =>{
     res.send('Rival Teams Server is under construction')
 })
 
-//------------ players GET----------------------------
+//------------ players GETs----------------------------
 
 app.get('/players', (req, res) =>{
     knex('players')
@@ -37,6 +38,22 @@ app.get('/players/:id', (req, res) =>{
             })
         })
 
+//------------ players POST----------------------------
+
+app.post('/players', (req, res) => {
+    const {id, name} = req.body
+
+    knex('players')
+        .insert({id, name})
+        .returning('id')
+        .then(function(){
+            res.status(201).json({success: true, id, message: 'Player created'})
+        })
+        .catch(function (error) {
+            console.error("Failed to insert player", error);
+            res.status(500).json({ error: "Something went wrong" });
+        })
+})
 
 app.listen(port, () => {
     console.log(`server is running on port ${port}`)

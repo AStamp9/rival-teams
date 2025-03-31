@@ -6,7 +6,7 @@ exports.seed = async function(knex) {
   // Deletes ALL existing entries
   await knex('team_comps').del()
   await knex('team_comps').insert([
-    {id: 1, 
+    {
       name: 'thunder', 
       team_id: 1, 
       character_1_id: 1,
