@@ -55,6 +55,28 @@ app.post('/players', (req, res) => {
         })
 })
 
+//------------ players POST----------------------------
+
+app.patch('/players/:id', (req, res) => {
+    let getId = req.params.id
+    const {name} = req.body
+
+    knex('players')
+        .where({"id" : getId})
+        .update({name})
+        .then(function(playerExist){
+            if (playerExist === 0) {
+                res.status(404).json({error: 'player doesnt exist, create new player'})
+            } else {
+            res.status(201).json({success: true, getId, message: 'Player updated'})
+            }
+        })
+        .catch(function (error) {
+            console.error("Failed to insert player", error);
+            res.status(500).json({ error: "Something went wrong" });
+        })
+})
+
 app.listen(port, () => {
     console.log(`server is running on port ${port}`)
 })
