@@ -8,7 +8,7 @@ app.get('/', (req, res) =>{
     res.send('Rival Teams Server is under construction')
 })
 
-//------------ players GETs----------------------------
+// ----------------- players CRUD---------------------
 
 app.get('/players', (req, res) =>{
     knex('players')
@@ -38,7 +38,6 @@ app.get('/players/:id', (req, res) =>{
             })
         })
 
-//------------ players POST----------------------------
 
 app.post('/players', (req, res) => {
     const {id, name} = req.body
@@ -54,8 +53,6 @@ app.post('/players', (req, res) => {
             res.status(500).json({ error: "Something went wrong" });
         })
 })
-
-//------------ players POST----------------------------
 
 app.patch('/players/:id', (req, res) => {
     let getId = req.params.id
@@ -77,8 +74,6 @@ app.patch('/players/:id', (req, res) => {
         })
 })
 
-//------------ players DELETE----------------------------
-
 app.delete('/players/:id', (req, res) => {
     let getId = req.params.id
 
@@ -94,6 +89,90 @@ app.delete('/players/:id', (req, res) => {
         })
         .catch(function (error) {
             console.error("Failed to delete player", error);
+            res.status(500).json({ error: "Something went wrong" });
+        })
+})
+
+//------------------------characters CRUD
+app.get('/characters', (req, res) =>{
+    knex('characters')
+        .select('*')
+        .then(data => res.json(data))
+        .catch(function (error) {
+            console.error("Failed to find characters", error);
+            res.status(500).json({ error: "Something went wrong" });
+        })
+});
+
+app.get('/characters/:id', (req, res) =>{
+    let getId = req.params.id
+    knex('characters')
+        .select('*')
+        .where({'id' : parseInt(getId)})
+        .then(characters => {
+            if (characters.length === 0){
+                res.status(404).json({error: "characters not found"});
+            } else {
+                res.json(characters)
+            }
+        })
+        .catch(function (error) {
+            console.error("Failed to find character", error);
+            res.status(500).json({ error: "Something went wrong" });
+            })
+        })
+
+
+app.post('/characters', (req, res) => {
+    const {id, name, role} = req.body
+
+    knex('characters')
+        .insert({id, name, role})
+        .returning('id')
+        .then(function(){
+            res.status(201).json({success: true, id, message: 'Character Added'})
+        })
+        .catch(function (error) {
+            console.error("Failed to add", error);
+            res.status(500).json({ error: "Something went wrong" });
+        })
+})
+
+app.patch('/characters/:id', (req, res) => {
+    let getId = req.params.id
+    const {name, role} = req.body
+
+    knex('characters')
+        .where({"id" : getId})
+        .update({name, role})
+        .then(function(characterExist){
+            if (characterExist === 0) {
+                res.status(404).json({error: 'character doesnt exist, create new character'})
+            } else {
+            res.status(201).json({success: true, getId, message: 'Character updated'})
+            }
+        })
+        .catch(function (error) {
+            console.error("Failed to add character", error);
+            res.status(500).json({ error: "Something went wrong" });
+        })
+})
+
+app.delete('/characters/:id', (req, res) => {
+    let getId = req.params.id
+
+    knex('characters')
+        .where({"id" : getId})
+        .del()
+        .then(function(characterExist){
+            if (characterExist === 0) {
+                res.status(404).json({error: 'Character doesnt exist'})
+            } else {
+            res.status(200).json({success: true, id: getId, message: 'Character Deleted'})
+            }
+        })
+        .catch(function (error) {
+            console.error("Failed to delete character", error);
             res.status(500).json({ error: "Something went wrong" });
         })
 })
