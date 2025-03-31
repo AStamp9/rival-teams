@@ -77,6 +77,27 @@ app.patch('/players/:id', (req, res) => {
         })
 })
 
+//------------ players DELETE----------------------------
+
+app.delete('/players/:id', (req, res) => {
+    let getId = req.params.id
+
+    knex('players')
+        .where({"id" : getId})
+        .del()
+        .then(function(playerExist){
+            if (playerExist === 0) {
+                res.status(404).json({error: 'player doesnt exist'})
+            } else {
+            res.status(200).json({success: true, id: getId, message: 'Player Deleted'})
+            }
+        })
+        .catch(function (error) {
+            console.error("Failed to delete player", error);
+            res.status(500).json({ error: "Something went wrong" });
+        })
+})
+
 app.listen(port, () => {
     console.log(`server is running on port ${port}`)
 })
