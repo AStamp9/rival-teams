@@ -93,7 +93,8 @@ app.delete('/players/:id', (req, res) => {
         })
 })
 
-//------------------------characters CRUD
+//------------------------characters CRUD----------------------------------
+
 app.get('/characters', (req, res) =>{
     knex('characters')
         .select('*')
@@ -173,6 +174,91 @@ app.delete('/characters/:id', (req, res) => {
         })
         .catch(function (error) {
             console.error("Failed to delete character", error);
+            res.status(500).json({ error: "Something went wrong" });
+        })
+})
+
+//------------------------teams CRUD----------------------------------
+
+app.get('/teams', (req, res) =>{
+    knex('teams')
+        .select('*')
+        .then(data => res.json(data))
+        .catch(function (error) {
+            console.error("Failed to find teams", error);
+            res.status(500).json({ error: "Something went wrong" });
+        })
+});
+
+app.get('/teams/:id', (req, res) =>{
+    let getId = req.params.id
+    knex('teams')
+        .select('*')
+        .where({'id' : parseInt(getId)})
+        .then(teams => {
+            if (teams.length === 0){
+                res.status(404).json({error: "teams not found"});
+            } else {
+                res.json(teams)
+            }
+        })
+        .catch(function (error) {
+            console.error("Failed to find team", error);
+            res.status(500).json({ error: "Something went wrong" });
+            })
+        })
+
+
+app.post('/teams', (req, res) => {
+    const {id, team_name} = req.body
+
+    knex('teams')
+        .insert({id, team_name})
+        .returning('id')
+        .then(function(){
+            res.status(201).json({success: true, id, message: 'Team Added'})
+        })
+        .catch(function (error) {
+            console.error("Failed to add team", error);
+            res.status(500).json({ error: "Something went wrong" });
+        })
+})
+
+app.patch('/teams/:id', (req, res) => {
+    let getId = req.params.id
+    const {team_name} = req.body
+
+    knex('teams')
+        .where({"id" : getId})
+        .update({team_name})
+        .then(function(teamExist){
+            if (teamExist === 0) {
+                res.status(404).json({error: 'team doesnt exist, create new team'})
+            } else {
+            res.status(201).json({success: true, getId, message: 'Team updated'})
+            }
+        })
+        .catch(function (error) {
+            console.error("Failed to update team", error);
+            res.status(500).json({ error: "Something went wrong" });
+        })
+})
+
+app.delete('/teams/:id', (req, res) => {
+    let getId = req.params.id
+
+    knex('teams')
+        .where({"id" : getId})
+        .del()
+        .then(function(teamExist){
+            if (teamExist === 0) {
+                res.status(404).json({error: 'team doesnt exist'})
+            } else {
+            res.status(200).json({success: true, id: getId, message: 'Teams Deleted'})
+            }
+        })
+        .catch(function (error) {
+            console.error("Failed to delete team", error);
             res.status(500).json({ error: "Something went wrong" });
         })
 })
