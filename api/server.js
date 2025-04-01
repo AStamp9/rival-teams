@@ -556,7 +556,179 @@ app.delete('/team_comps/:id', (req, res) => {
         })
 })
 
+//------------------team_comp_players CRUD------------------------------
 
+app.get('/team_comp_players', (req, res) =>{
+    knex('team_comp_players')
+        .select('*')
+        .then(data => res.json(data))
+        .catch(function (error) {
+            console.error("Failed to find team comp players", error);
+            res.status(500).json({ error: "Something went wrong" });
+        })
+});
+
+app.get('/team_comp_players/:id', (req, res) =>{
+    let getId = req.params.id
+
+    knex('team_comp_players')
+        .select('*')
+        .where({ "id" : parseInt(getId)})
+        .first()
+        .then(data => {
+            if (!data) {
+                res.status(404).json({ error: "team comp players not found" });
+            } else {
+                res.json(data);
+            }
+        })
+        .catch(function (error) {
+            console.error("Failed to get team comp id", error);
+            res.status(500).json({ error: "Something went wrong" });
+        })
+});
+
+app.post('/team_comp_players', (req, res) => {
+    const {
+        name, 
+        team_comp_id, 
+        character_1_id,
+        player_1_id,            
+        character_2_id,
+        player_2_id, 
+        character_3_id,
+        player_3_id,
+        character_4_id,
+        player_4_id,
+        character_5_id,
+        player_5_id, 
+        character_6_id,
+        player_6_id 
+     } = req.body
+
+     if (
+        !name ||
+        !team_comp_id ||
+        !character_1_id || !player_1_id ||
+        !character_2_id || !player_2_id ||
+        !character_3_id || !player_3_id ||
+        !character_4_id || !player_4_id ||
+        !character_5_id || !player_5_id ||
+        !character_6_id || !player_6_id
+    ) {
+        return res.status(400).json({ error: "All fields must be provided" });
+    }
+
+    const characterIds = [
+        character_1_id, character_2_id, character_3_id,
+        character_4_id, character_5_id, character_6_id
+      ];
+      
+      const playerIds = [
+        player_1_id, player_2_id, player_3_id,
+        player_4_id, player_5_id, player_6_id
+      ];
+      
+      const hasDuplicate = (arr) => new Set(arr).size !== arr.length;
+      
+      if (hasDuplicate(characterIds)) {
+        return res.status(400).json({ error: "Duplicate characters are not allowed" });
+      }
+      
+      if (hasDuplicate(playerIds)) {
+        return res.status(400).json({ error: "Duplicate players are not allowed" });
+      }
+
+    knex('team_comp_players')
+        .insert({
+            name, 
+            team_comp_id, 
+            character_1_id,
+            player_1_id,            
+            character_2_id,
+            player_2_id, 
+            character_3_id,
+            player_3_id,
+            character_4_id,
+            player_4_id,
+            character_5_id,
+            player_5_id, 
+            character_6_id,
+            player_6_id 
+         })
+        .returning('id')
+        .then(function([id]){
+            res.status(201).json({success: true, id, message: 'team comp players created'})
+        })
+        .catch(function (error) {
+            console.error("Failed to add team comp players", error);
+            res.status(500).json({ error: "Something went wrong" });
+            }
+          );
+})
+
+// app.patch('/team_comps/:id', (req, res) => {
+//     const id = parseInt(req.params.id)
+//     const {
+//         name, 
+//         team_id, 
+//         character_1_id,
+//         character_2_id, 
+//         character_3_id, 
+//         character_4_id, 
+//         character_5_id, 
+//         character_6_id 
+//      } = req.body
+     
+//      const updateData = {
+//         ...(name && { name }),
+//         ...(team_id && { team_id }),
+//         ...(character_1_id && { character_1_id }),
+//         ...(character_2_id && { character_2_id }),
+//         ...(character_3_id && { character_3_id }),
+//         ...(character_4_id && { character_4_id }),
+//         ...(character_5_id && { character_5_id }),
+//         ...(character_6_id && { character_6_id }),
+//       };
+
+//       if (Object.keys(updateData).length === 0) {
+//         return res.status(400).json({ error: "No fields to update" });
+//       }
+
+//     knex('team_comps')
+//       .where({id})
+//       .update( updateData )
+//       .then(count => {
+//         if (count === 0) {
+//           res.status(404).json({ error: "team comp not found" });
+//         } else {
+//           res.json({ success: true, message: "team comp updated" });
+//         }
+//       })
+//       .catch(error => {
+//         console.error("Failed to update team comp", error);
+//         res.status(500).json({ error: "Something went wrong" });
+//       });
+//   });
+
+// app.delete('/team_comps/:id', (req, res) => {
+//     const id = parseInt(req.params.id);
+
+//     knex('team_comps')
+//         .where({"id" : id})
+//         .del()
+//         .then(function(deleteCount){
+//             if (deleteCount === 0) {
+//                 res.status(404).json({error: 'team comp doesnt exist'})
+//             } else {
+//             res.status(200).json({success: true, message: 'team comp deleted'})
+//             }
+//         })
+//         .catch(function (error) {
+//             console.error("Failed to delete team comp", error);
+//             res.status(500).json({ error: "Something went wrong" });
+//         })
+// })
 
 app.listen(port, () => {
     console.log(`server is running on port ${port}`)
