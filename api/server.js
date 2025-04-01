@@ -456,6 +456,65 @@ app.get('/team_comps/:id', (req, res) =>{
         })
 });
 
+app.get('/team_comps/:id/details', async (req, res) => {
+    const teamCompId = parseInt(req.params.id);
+
+    try {
+        const comp = await knex('team_comp_players')
+            .where({ team_comp_id: teamCompId })
+            .first();
+
+        if (!comp) {
+            return res.status(404).json({ error: 'Team composition details not found' });
+        }
+
+        const characterIds = [
+            comp.character_1_id,
+            comp.character_2_id,
+            comp.character_3_id,
+            comp.character_4_id,
+            comp.character_5_id,
+            comp.character_6_id,
+        ];
+
+        const playerIds = [
+            comp.player_1_id,
+            comp.player_2_id,
+            comp.player_3_id,
+            comp.player_4_id,
+            comp.player_5_id,
+            comp.player_6_id,
+        ];
+
+        const characters = await knex('characters').whereIn('id', characterIds);
+        const players = await knex('players').whereIn('id', playerIds);
+        const proficiencyData = await knex('player_proficiency')
+            .whereIn('player_id', playerIds)
+            .whereIn('character_id', characterIds);
+
+        const details = characterIds.map((charId, i) => {
+            const playerId = playerIds[i];
+            const character = characters.find(c => c.id === charId);
+            const player = players.find(p => p.id === playerId);
+            const prof = proficiencyData.find(
+                p => p.character_id === charId && p.player_id === playerId
+            );
+
+            return {
+                character,
+                player,
+                proficiency: prof ? prof.proficiency : null,
+            };
+        });
+
+        res.json({ team_comp_id: teamCompId, details });
+
+    } catch (error) {
+        console.error('Failed to fetch team comp details', error);
+        res.status(500).json({ error: 'Something went wrong' });
+    }
+});
+
 app.post('/team_comps', (req, res) => {
     const {
         name, 
@@ -586,6 +645,24 @@ app.get('/team_comp_players/:id', (req, res) =>{
             console.error("Failed to get team comp id", error);
             res.status(500).json({ error: "Something went wrong" });
         })
+});
+
+app.get('/team_comp_players/team_comp/:team_comp_id', (req, res) => {
+    const team_comp_id = parseInt(req.params.team_comp_id);
+
+    knex('team_comp_players')
+        .where({ team_comp_id })
+        .then(data => {
+            if (data.length === 0) {
+                res.status(404).json({ error: 'No players found for this team composition' });
+            } else {
+                res.json(data);
+            }
+        })
+        .catch(error => {
+            console.error('Failed to fetch team comp players', error);
+            res.status(500).json({ error: 'Something went wrong' });
+        });
 });
 
 app.post('/team_comp_players', (req, res) => {
