@@ -493,47 +493,68 @@ app.post('/team_comps', (req, res) => {
           );
 })
 
-// app.patch('/proficiency', (req, res) => {
-//     const { player_id, character_id, proficiency } = req.body;
-  
-//     if (!Number.isInteger(proficiency) || proficiency < 1 || proficiency > 5) {
-//       return res.status(400).json({ error: "Proficiency must be an integer between 1 and 5" });
-//     }
-  
-//     knex('player_proficiency')
-//       .where({ player_id, character_id })
-//       .update({ proficiency })
-//       .then(count => {
-//         if (count === 0) {
-//           res.status(404).json({ error: "Proficiency not found" });
-//         } else {
-//           res.json({ success: true, message: "Proficiency updated" });
-//         }
-//       })
-//       .catch(error => {
-//         console.error("Failed to update proficiency", error);
-//         res.status(500).json({ error: "Something went wrong" });
-//       });
-//   });
+app.patch('/team_comps/:id', (req, res) => {
+    const id = parseInt(req.params.id)
+    const {
+        name, 
+        team_id, 
+        character_1_id,
+        character_2_id, 
+        character_3_id, 
+        character_4_id, 
+        character_5_id, 
+        character_6_id 
+     } = req.body
+     
+     const updateData = {
+        ...(name && { name }),
+        ...(team_id && { team_id }),
+        ...(character_1_id && { character_1_id }),
+        ...(character_2_id && { character_2_id }),
+        ...(character_3_id && { character_3_id }),
+        ...(character_4_id && { character_4_id }),
+        ...(character_5_id && { character_5_id }),
+        ...(character_6_id && { character_6_id }),
+      };
 
-// app.delete('/proficiency', (req, res) => {
-//     const { player_id, character_id} = req.body;
+      if (Object.keys(updateData).length === 0) {
+        return res.status(400).json({ error: "No fields to update" });
+      }
 
-//     knex('player_proficiency')
-//         .where({player_id, character_id})
-//         .del()
-//         .then(function(proficiencyExist){
-//             if (proficiencyExist === 0) {
-//                 res.status(404).json({error: 'proficiency doesnt exist'})
-//             } else {
-//             res.status(200).json({success: true, message: 'proficiency deleted'})
-//             }
-//         })
-//         .catch(function (error) {
-//             console.error("Failed to delete proficiency", error);
-//             res.status(500).json({ error: "Something went wrong" });
-//         })
-// })
+    knex('team_comps')
+      .where({id})
+      .update( updateData )
+      .then(count => {
+        if (count === 0) {
+          res.status(404).json({ error: "team comp not found" });
+        } else {
+          res.json({ success: true, message: "team comp updated" });
+        }
+      })
+      .catch(error => {
+        console.error("Failed to update team comp", error);
+        res.status(500).json({ error: "Something went wrong" });
+      });
+  });
+
+app.delete('/team_comps/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+
+    knex('team_comps')
+        .where({"id" : id})
+        .del()
+        .then(function(deleteCount){
+            if (deleteCount === 0) {
+                res.status(404).json({error: 'team comp doesnt exist'})
+            } else {
+            res.status(200).json({success: true, message: 'team comp deleted'})
+            }
+        })
+        .catch(function (error) {
+            console.error("Failed to delete team comp", error);
+            res.status(500).json({ error: "Something went wrong" });
+        })
+})
 
 
 
