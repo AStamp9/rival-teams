@@ -424,6 +424,118 @@ app.delete('/proficiency', (req, res) => {
         })
 })
 
+//------------------team_comps CRUD------------------------------
+
+app.get('/team_comps', (req, res) =>{
+    knex('team_comps')
+        .select('*')
+        .then(data => res.json(data))
+        .catch(function (error) {
+            console.error("Failed to find team compositions", error);
+            res.status(500).json({ error: "Something went wrong" });
+        })
+});
+
+app.get('/team_comps/:id', (req, res) =>{
+    let getId = req.params.id
+
+    knex('team_comps')
+        .select('*')
+        .where({ "id" : parseInt(getId)})
+        .first()
+        .then(data => {
+            if (!data) {
+                res.status(404).json({ error: "Proficiency not found" });
+            } else {
+                res.json(data);
+            }
+        })
+        .catch(function (error) {
+            console.error("Failed to get proficiency", error);
+            res.status(500).json({ error: "Something went wrong" });
+        })
+});
+
+app.post('/team_comps', (req, res) => {
+    const {
+        name, 
+        team_id, 
+        character_1_id,
+        character_2_id, 
+        character_3_id, 
+        character_4_id, 
+        character_5_id, 
+        character_6_id 
+     } = req.body
+
+     if (!name || !team_id) {
+        return res.status(400).json({ error: "Name and team_id are required" });
+      }
+
+    knex('team_comps')
+        .insert({    
+            name, 
+            team_id, 
+            character_1_id,
+            character_2_id, 
+            character_3_id, 
+            character_4_id, 
+            character_5_id, 
+            character_6_id })
+        .returning('id')
+        .then(function([id]){
+            res.status(201).json({success: true, id, message: 'team comp created'})
+        })
+        .catch(function (error) {
+            console.error("Failed to add team comp", error);
+            res.status(500).json({ error: "Something went wrong" });
+            }
+          );
+})
+
+// app.patch('/proficiency', (req, res) => {
+//     const { player_id, character_id, proficiency } = req.body;
+  
+//     if (!Number.isInteger(proficiency) || proficiency < 1 || proficiency > 5) {
+//       return res.status(400).json({ error: "Proficiency must be an integer between 1 and 5" });
+//     }
+  
+//     knex('player_proficiency')
+//       .where({ player_id, character_id })
+//       .update({ proficiency })
+//       .then(count => {
+//         if (count === 0) {
+//           res.status(404).json({ error: "Proficiency not found" });
+//         } else {
+//           res.json({ success: true, message: "Proficiency updated" });
+//         }
+//       })
+//       .catch(error => {
+//         console.error("Failed to update proficiency", error);
+//         res.status(500).json({ error: "Something went wrong" });
+//       });
+//   });
+
+// app.delete('/proficiency', (req, res) => {
+//     const { player_id, character_id} = req.body;
+
+//     knex('player_proficiency')
+//         .where({player_id, character_id})
+//         .del()
+//         .then(function(proficiencyExist){
+//             if (proficiencyExist === 0) {
+//                 res.status(404).json({error: 'proficiency doesnt exist'})
+//             } else {
+//             res.status(200).json({success: true, message: 'proficiency deleted'})
+//             }
+//         })
+//         .catch(function (error) {
+//             console.error("Failed to delete proficiency", error);
+//             res.status(500).json({ error: "Something went wrong" });
+//         })
+// })
+
+
 
 app.listen(port, () => {
     console.log(`server is running on port ${port}`)
