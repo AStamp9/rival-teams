@@ -405,24 +405,24 @@ app.patch('/proficiency', (req, res) => {
       });
   });
 
-// app.delete('/proficiency/:id', (req, res) => {
-//     let getId = req.params.id
+app.delete('/proficiency', (req, res) => {
+    const { player_id, character_id} = req.body;
 
-//     knex('player_proficiency')
-//         .where({"id" : getId})
-//         .del()
-//         .then(function(characterExist){
-//             if (characterExist === 0) {
-//                 res.status(404).json({error: 'Character doesnt exist'})
-//             } else {
-//             res.status(200).json({success: true, id: getId, message: 'Character Deleted'})
-//             }
-//         })
-//         .catch(function (error) {
-//             console.error("Failed to delete character", error);
-//             res.status(500).json({ error: "Something went wrong" });
-//         })
-// })
+    knex('player_proficiency')
+        .where({player_id, character_id})
+        .del()
+        .then(function(proficiencyExist){
+            if (proficiencyExist === 0) {
+                res.status(404).json({error: 'proficiency doesnt exist'})
+            } else {
+            res.status(200).json({success: true, message: 'proficiency deleted'})
+            }
+        })
+        .catch(function (error) {
+            console.error("Failed to delete proficiency", error);
+            res.status(500).json({ error: "Something went wrong" });
+        })
+})
 
 
 app.listen(port, () => {
