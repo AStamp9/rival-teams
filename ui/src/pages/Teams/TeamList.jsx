@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import TeamCard from '../../components/TeamCard';
 
 function TeamList() {
     const [teams, setTeams] = useState([]);
@@ -18,6 +19,19 @@ function TeamList() {
         
     }, [])
 
+    const handleDelete = (id) => {
+        fetch(`http://localhost:8081/teams/${id}`, {
+          method: 'DELETE',
+        })
+          .then(res => {
+            if (!res.ok) {
+              throw new Error('Failed to delete team');
+            }
+            setTeams(prev => prev.filter(team => team.id !== id));
+          })
+          .catch(err => console.error('Delete error:', err));
+      };
+
     if (loading) {
         return <p>Loading teams... </p>
     }
@@ -30,7 +44,7 @@ function TeamList() {
         ) : (
           <ul>
             {teams.map(team => (
-              <li key={team.id}>{team.team_name}</li>
+                <TeamCard key={team.id} team={team} onDelete={handleDelete} />
             ))}
           </ul>
         )}
