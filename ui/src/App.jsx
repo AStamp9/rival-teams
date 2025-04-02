@@ -11,12 +11,14 @@ import CompList from './pages/Comps/CompList';
 import CompDetails from './pages/Comps/CompDetails';
 import CreateComp from './pages/Comps/CreateComp';
 import EditComp from './pages/Comps/EditComp';
+import NavBar from './components/NavBar';
 import './App.css'
 
 function App() {
 
   return (
     <Router>
+    <NavBar />
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/teams" element={<TeamList />} />

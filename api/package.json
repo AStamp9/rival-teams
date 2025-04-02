@@ -10,5 +10,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "kill-port 8081 && nodemon ./server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5"
   }
 }
