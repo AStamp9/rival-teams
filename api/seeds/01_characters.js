@@ -13,6 +13,10 @@ exports.seed = async function(knex) {
     {name: 'loki', role: 'strategist'},
     {name: 'luna snow', role: 'strategist'},
     {name: 'wolverine', role: 'duelist'},
-    {name: 'winter soldier', role: 'duelist'}
+    {name: 'winter soldier', role: 'duelist'},
+    {name: 'Iron Man', role: 'duelist' },
+    {name: 'Scarlet Witch', role: 'duelist' },
+    {name: 'Black Panther', role: 'duelist' },
+    {name: 'Spider-Man', role: 'duelist' }
   ]);
 };

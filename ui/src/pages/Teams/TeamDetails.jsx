@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useGlobalContext } from '../../components/GlobalContext';
 
@@ -49,7 +50,9 @@ function TeamDetails() {
       ) : (
         <ul>
           {players.map(player => (
-            <li key={player.id}>{player.name}</li>
+            <li key={player.id}>
+            <Link to={`/players/${player.id}`}>{player.name}</Link>
+          </li>
           ))}
         </ul>
       )}
