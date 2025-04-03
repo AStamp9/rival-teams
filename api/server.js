@@ -281,6 +281,51 @@ app.get('/character_comps/:id', (req, res) => {
     });
 });
 
+app.get('/character_comps/:id/details', (req, res) => {
+    const compId = parseInt(req.params.id);
+  
+    knex('character_comps')
+      .where({ id: compId })
+      .first()
+      .then(comp => {
+        if (!comp) {
+          return res.status(404).json({ error: 'Character comp not found' });
+        }
+  
+        const characterIds = [
+          comp.character_1_id,
+          comp.character_2_id,
+          comp.character_3_id,
+          comp.character_4_id,
+          comp.character_5_id,
+          comp.character_6_id,
+        ];
+  
+        knex('characters')
+          .whereIn('id', characterIds)
+          .select('id', 'name', 'role')
+          .then(characters => {
+            const getChar = id => characters.find(c => c.id === id);
+            const enrichedComp = {
+              ...comp,
+              characters: [
+                getChar(comp.character_1_id),
+                getChar(comp.character_2_id),
+                getChar(comp.character_3_id),
+                getChar(comp.character_4_id),
+                getChar(comp.character_5_id),
+                getChar(comp.character_6_id),
+              ]
+            };
+            res.json(enrichedComp);
+          });
+      })
+      .catch(err => {
+        console.error('Failed to load enriched comp', err);
+        res.status(500).json({ error: 'Something went wrong' });
+      });
+  });
+
 app.post('/character_comps', (req, res) => {
     const {
       name,
@@ -400,6 +445,17 @@ app.get('/teams/:id/players', (req, res) => {
         res.status(500).json({ error: 'Something went wrong' });
         });
     });
+
+app.get('/teams/:id/comps', (req, res) => {
+    const teamId = parseInt(req.params.id);
+    knex('team_comps')
+        .where({ team_id: teamId })
+        .then(comps => res.json(comps))
+        .catch(error => {
+            console.error("Failed to fetch comps for team", error);
+            res.status(500).json({ error: "Something went wrong" });
+        });
+});
 
 
 app.post('/teams', (req, res) => {

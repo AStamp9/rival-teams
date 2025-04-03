@@ -11,7 +11,10 @@ import EditPlayer from './pages/Players/EditPlayer';
 import CompList from './pages/Comps/CompList';
 import CompDetails from './pages/Comps/CompDetails';
 import CreateComp from './pages/Comps/CreateComp';
+import SelectTeamForComp from './pages/Comps/SelectTeamForComp';
 import EditComp from './pages/Comps/EditComp';
+import TeamCompDetails from './pages/Comps/TeamCompDetails';
+import AssignComp from './pages/Comps/AssignComp';
 import NavBar from './components/NavBar';
 import './App.css'
 
@@ -36,6 +39,10 @@ function App() {
       <Route path="/comps/:id" element={<CompDetails />} />
       <Route path="/comps/create" element={<CreateComp />} />
       <Route path="/comps/:id/edit" element={<EditComp />} />
+
+      <Route path="/comps/:comp_id/assign/:team_id" element={<AssignComp />} />
+      <Route path="/team_comps/:id/details" element={<TeamCompDetails />} />
+      <Route path="/comps/:comp_id/assign/select" element={<SelectTeamForComp />} />
     </Routes>
   </Router>
   );

@@ -8,8 +8,9 @@ function TeamDetails() {
   const [team, setTeam] = useState(null);
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [teamComps, setTeamComps] = useState([]);
   const [error, setError] = useState(null);
-  const { players: allPlayers } = useGlobalContext();
+  
   
 
   useEffect(() => {
@@ -31,6 +32,16 @@ function TeamDetails() {
       .then(data => setPlayers(data))
       .catch(err => {
         console.error('Error fetching team players:', err);
+      });
+
+      fetch(`http://localhost:8081/team_comps`)
+        .then(res => res.json())
+        .then(data => {
+            const compsForThisTeam = data.filter(comp => comp.team_id === parseInt(id));
+            setTeamComps(compsForThisTeam);
+        })
+        .catch(err => {
+            console.error('Failed to fetch team comps', err);
       });
   }, [id]);
 
@@ -56,6 +67,18 @@ function TeamDetails() {
           ))}
         </ul>
       )}
+      <h3>Team Compositions</h3>
+        {teamComps.length === 0 ? (
+        <p>This team has no compositions yet.</p>
+        ) : (
+        <ul>
+            {teamComps.map(comp => (
+            <li key={comp.id}>
+                <a href={`/team_comps/${comp.id}/details`}>{comp.name}</a>
+            </li>
+            ))}
+        </ul>
+        )}
 
     </div>
   );
