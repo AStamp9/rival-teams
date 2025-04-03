@@ -263,10 +263,6 @@ app.get('/character_comps', (req, res) => {
       });
   });
 
-  ✅ 1. GET /character_comps/:id
-js
-Copy
-Edit
 app.get('/character_comps/:id', (req, res) => {
   const compId = parseInt(req.params.id);
 
