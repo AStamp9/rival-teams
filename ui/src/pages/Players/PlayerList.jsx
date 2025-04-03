@@ -55,16 +55,6 @@ function PlayerList() {
 
   return (
     <div>
-      <h2>Players</h2>
-      <ul>
-        {players.map(player => (
-          <li key={player.id}>
-            {player.name}
-            <button onClick={() => navigate(`/players/${player.id}`)}>View</button>
-            <button onClick={() => handleDelete(player.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
       <h3>Create New Player</h3>
         <form onSubmit={handleCreatePlayer}>
         <input
@@ -76,6 +66,16 @@ function PlayerList() {
         />
         <button type="submit">Create Player</button>
         </form>
+      <h2>Players</h2>
+      <ul>
+        {players.map(player => (
+          <li key={player.id}>
+            {player.name}
+            <button onClick={() => navigate(`/players/${player.id}`)}>View</button>
+            <button onClick={() => handleDelete(player.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
         {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
