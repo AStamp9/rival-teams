@@ -40,6 +40,22 @@ app.get('/players/:id', (req, res) =>{
             })
         })
 
+app.get('/players/:id/teams', (req, res) => {
+    const playerId = parseInt(req.params.id);
+    
+    knex('player_team')
+        .join('teams', 'player_team.team_id', 'teams.id')
+        .select('teams.id', 'teams.team_name')
+        .where('player_team.player_id', playerId)
+        .then(data => {
+        res.json(data);
+        })
+        .catch(err => {
+        console.error('Failed to fetch teams for player', err);
+        res.status(500).json({ error: 'Something went wrong' });
+        });
+    });
+    
 app.get('/players/:id/proficiencies', (req, res) => {
     const playerId = parseInt(req.params.id);
     

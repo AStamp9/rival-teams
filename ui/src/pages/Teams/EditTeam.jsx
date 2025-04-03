@@ -95,7 +95,6 @@ function EditTeam() {
         return res.json();
       })
       .then(() => {
-        // Remove from UI
         setPlayerLinks(prev => prev.filter(link => link.id !== linkId));
       })
       .catch(err => {

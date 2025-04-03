@@ -31,6 +31,25 @@ function PlayerList() {
       });
   };
 
+  const handleDelete = (playerId) => {
+    if (!window.confirm('Are you sure you want to delete this player?')) return;
+  
+    fetch(`http://localhost:8081/players/${playerId}`, {
+      method: 'DELETE',
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to delete player');
+        return res.json();
+      })
+      .then(() => {
+        window.location.reload(); // Replace with context refresh later
+      })
+      .catch(err => {
+        console.error('Error deleting player:', err);
+      });
+  };
+
+
   if (loadingPlayers) return <p>Loading players...</p>;
   if (players.length === 0) return <p>No players found.</p>;
 
@@ -42,10 +61,11 @@ function PlayerList() {
           <li key={player.id}>
             {player.name}
             <button onClick={() => navigate(`/players/${player.id}`)}>View</button>
+            <button onClick={() => handleDelete(player.id)}>Delete</button>
           </li>
         ))}
       </ul>
-      <h3>Add New Player</h3>
+      <h3>Create New Player</h3>
         <form onSubmit={handleCreatePlayer}>
         <input
             type="text"
