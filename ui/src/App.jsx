@@ -5,6 +5,7 @@ import TeamDetails from './pages/Teams/TeamDetails';
 import CreateTeam from './pages/Teams/CreateTeam';
 import EditTeam from './pages/Teams/EditTeam';
 import PlayerList from './pages/Players/PlayerList';
+import PlayerDetails from './pages/Players/PlayerDetails';
 import AddPlayer from './pages/Players/AddPlayer';
 import EditPlayer from './pages/Players/EditPlayer';
 import CompList from './pages/Comps/CompList';
@@ -29,6 +30,7 @@ function App() {
       <Route path="/players" element={<PlayerList />} />
       <Route path="/players/create" element={<AddPlayer />} />
       <Route path="/players/:id/edit" element={<EditPlayer />} />
+      <Route path="/players/:id" element={<PlayerDetails />} />
 
       <Route path="/comps" element={<CompList />} />
       <Route path="/comps/:id" element={<CompDetails />} />

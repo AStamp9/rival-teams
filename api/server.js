@@ -40,6 +40,27 @@ app.get('/players/:id', (req, res) =>{
             })
         })
 
+app.get('/players/:id/proficiencies', (req, res) => {
+    const playerId = parseInt(req.params.id);
+    
+    knex('player_proficiency')
+        .join('characters', 'player_proficiency.character_id', 'characters.id')
+        .select(
+        'characters.id as character_id',
+        'characters.name as character_name',
+        'characters.role',
+        'player_proficiency.proficiency'
+        )
+        .where('player_proficiency.player_id', playerId)
+        .then(data => {
+        res.json(data);
+        })
+        .catch(error => {
+        console.error('Failed to get player proficiencies', error);
+        res.status(500).json({ error: 'Something went wrong' });
+        });
+    });
+
 
 app.post('/players', (req, res) => {
     const {id, name} = req.body
@@ -209,6 +230,22 @@ app.get('/teams/:id', (req, res) =>{
             res.status(500).json({ error: "Something went wrong" });
             })
         })
+
+app.get('/teams/:id/players', (req, res) => {
+    const teamId = parseInt(req.params.id);
+    
+   knex('player_team')
+        .join('players', 'player_team.player_id', 'players.id')
+        .select('players.id', 'players.name')
+        .where('player_team.team_id', teamId)
+        .then(players => {
+            res.json(players);  
+        })
+    .catch (error => {
+        console.error('Failed to get players for team', error);
+        res.status(500).json({ error: 'Something went wrong' });
+        });
+    });
 
 
 app.post('/teams', (req, res) => {
