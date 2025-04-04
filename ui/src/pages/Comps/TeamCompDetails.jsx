@@ -9,7 +9,8 @@ function TeamCompDetails() {
   const navigate = useNavigate();
   const [bans, setBans] = useState(null);
   const [teamName, setTeamName] = useState('');
-
+  const [teamId, setTeamId] = useState(null);
+  
   const { characters } = useGlobalContext();
 
   useEffect(() => {
@@ -31,6 +32,7 @@ function TeamCompDetails() {
       .then(res => res.json())
       .then(data => {
          const teamId = data.team_id;
+         setTeamId(teamId);
          return fetch(`http://localhost:8081/teams/${teamId}`);
         })
       .then(res => res.json())
@@ -92,7 +94,12 @@ function TeamCompDetails() {
         )}
       </div>
 
-      <button onClick={() => navigate(`/comps/${id}/edit`)}>Edit Composition</button>
+      {/* <button
+        onClick={() => navigate(`/comps/${details.team_comp_id}/assign/${teamId}`)}
+        disabled={!teamId}
+        >
+        Edit Composition
+      </button> */}
       <button onClick={handleDelete} style={{ marginLeft: '1rem', color: 'white' }}>
         Delete Composition
       </button>
