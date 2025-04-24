@@ -51,7 +51,7 @@ function TeamDetails() {
 
   return (
     <div>
-           <h2>Team Details</h2>
+      <h2>Team Details</h2>
       <p><strong>Name:</strong> {team.team_name}</p>
       <p><strong>ID:</strong> {team.id}</p>
 

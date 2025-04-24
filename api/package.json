@@ -12,6 +12,7 @@
     "start": "kill-port 8081 && nodemon ./server.js"
   },
   "dependencies": {
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
   }
 }
