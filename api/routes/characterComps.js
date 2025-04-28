@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const knex = require('knex')(require('../knexfile.js')["development"]);
 
-router.get('/character_comps', (req, res) => {
+router.get('/', (req, res) => {
     knex('character_comps')
       .select('*')
       .then(comps => {
@@ -48,7 +48,7 @@ router.get('/character_comps', (req, res) => {
       });
   });
 
-router.get('/character_comps/:id', (req, res) => {
+router.get('/:id', (req, res) => {
   const compId = parseInt(req.params.id);
 
   knex('character_comps')
@@ -66,7 +66,7 @@ router.get('/character_comps/:id', (req, res) => {
     });
 });
 
-router.get('/character_comps/:id/details', (req, res) => {
+router.get('/:id/details', (req, res) => {
     const compId = parseInt(req.params.id);
   
     knex('character_comps')
@@ -111,7 +111,7 @@ router.get('/character_comps/:id/details', (req, res) => {
       });
   });
 
-router.post('/character_comps', (req, res) => {
+router.post('/', (req, res) => {
     const {
       name,
       character_1_id,
@@ -142,7 +142,7 @@ router.post('/character_comps', (req, res) => {
       });
   });
 
-router.patch('/character_comps/:id', (req, res) => {
+router.patch('/:id', (req, res) => {
 const compId = parseInt(req.params.id);
 const updateData = req.body;
 
@@ -166,7 +166,7 @@ knex('character_comps')
     });
 });
 
-router.delete('/character_comps/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
 const compId = parseInt(req.params.id);
 
 knex('character_comps')

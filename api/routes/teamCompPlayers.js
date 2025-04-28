@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const knex = require('knex')(require('../knexfile.js')["development"]);
 
-router.get('/team_comp_players', (req, res) =>{
+router.get('/', (req, res) =>{
     knex('team_comp_players')
         .select('*')
         .then(data => res.json(data))
@@ -12,7 +12,7 @@ router.get('/team_comp_players', (req, res) =>{
         })
 });
 
-router.get('/team_comp_players/:id', (req, res) =>{
+router.get('/:id', (req, res) =>{
     let getId = req.params.id
 
     knex('team_comp_players')
@@ -32,7 +32,7 @@ router.get('/team_comp_players/:id', (req, res) =>{
         })
 });
 
-router.get('/team_comp_players/team_comp/:team_comp_id', (req, res) => {
+router.get('/team_comp/:team_comp_id', (req, res) => {
     const team_comp_id = parseInt(req.params.team_comp_id);
 
     knex('team_comp_players')
@@ -50,7 +50,7 @@ router.get('/team_comp_players/team_comp/:team_comp_id', (req, res) => {
         });
 });
 
-router.post('/team_comp_players', (req, res) => {
+router.post('/', (req, res) => {
     const {
         name, 
         team_comp_id, 
@@ -129,7 +129,7 @@ router.post('/team_comp_players', (req, res) => {
           );
 })
 
-router.patch('/team_comp_players/:id', (req, res) => {
+router.patch('/:id', (req, res) => {
     const id = parseInt(req.params.id)
     const {
         name, 
@@ -212,7 +212,7 @@ router.patch('/team_comp_players/:id', (req, res) => {
       });
   });
 
-router.delete('/team_comp_players/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
     const id = parseInt(req.params.id);
 
     knex('team_comp_players')

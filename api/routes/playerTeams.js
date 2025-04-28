@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const knex = require('knex')(require('../knexfile.js')["development"]);
 
-router.get('/player_teams', (req, res) =>{
+router.get('/', (req, res) =>{
     knex('player_team')
         .select('*')
         .then(data => res.json(data))
@@ -12,7 +12,7 @@ router.get('/player_teams', (req, res) =>{
         })
 });
 
-router.get('/player_teams/:id', (req, res) =>{
+router.get('/:id', (req, res) =>{
     let getId = req.params.id
     knex('player_team')
         .select('*')
@@ -31,7 +31,7 @@ router.get('/player_teams/:id', (req, res) =>{
         })
 
 
-router.post('/player_teams', (req, res) => {
+router.post('/', (req, res) => {
     const {id, player_id, team_id} = req.body
 
     knex('player_team')
@@ -46,7 +46,7 @@ router.post('/player_teams', (req, res) => {
         })
 })
 
-router.delete('/player_teams/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
     let getId = req.params.id
 
     knex('player_team')

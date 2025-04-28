@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const knex = require('knex')(require('../knexfile.js')["development"]);
 
-router.get('/proficiency', (req, res) =>{
+router.get('/', (req, res) =>{
     knex('player_proficiency')
         .select('*')
         .then(data => res.json(data))
@@ -12,7 +12,7 @@ router.get('/proficiency', (req, res) =>{
         })
 });
 
-router.get('/proficiency/:player_id/:character_id', (req, res) =>{
+router.get('/:player_id/:character_id', (req, res) =>{
     const { player_id, character_id } = req.params;
 
     knex('player_proficiency')
@@ -31,7 +31,7 @@ router.get('/proficiency/:player_id/:character_id', (req, res) =>{
         })
 });
 
-router.post('/proficiency', (req, res) => {
+router.post('/', (req, res) => {
     const {player_id, character_id, proficiency} = req.body
 
     if (!Number.isInteger(proficiency) || proficiency < 1 || proficiency > 5) {
@@ -54,7 +54,7 @@ router.post('/proficiency', (req, res) => {
           });
 })
 
-router.patch('/proficiency', (req, res) => {
+router.patch('/', (req, res) => {
     const { player_id, character_id, proficiency } = req.body;
   
     if (!Number.isInteger(proficiency) || proficiency < 1 || proficiency > 5) {
@@ -77,7 +77,7 @@ router.patch('/proficiency', (req, res) => {
       });
   });
 
-router.delete('/proficiency', (req, res) => {
+router.delete('/', (req, res) => {
     const { player_id, character_id} = req.body;
 
     knex('player_proficiency')

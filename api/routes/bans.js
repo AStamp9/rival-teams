@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const knex = require('knex')(require('../knexfile.js')["development"]);
 
-router.get('/bans', (req, res) => {
+router.get('/', (req, res) => {
     knex('bans')
         .select('*')
         .then(data => res.json(data))
@@ -12,7 +12,7 @@ router.get('/bans', (req, res) => {
         });
 });
 
-router.get('/bans/team_comp/:team_comp_id', (req, res) => {
+router.get('/team_comp/:team_comp_id', (req, res) => {
     const { team_comp_id } = req.params;
 
     knex('bans')
@@ -31,7 +31,7 @@ router.get('/bans/team_comp/:team_comp_id', (req, res) => {
         });
 });
 
-router.post('/bans', async (req, res) => {
+router.post('/', async (req, res) => {
     const { team_comps_id, ban_character_1_id, ban_character_2_id } = req.body;
 
     if (!team_comps_id || !ban_character_1_id || !ban_character_2_id) {
@@ -86,7 +86,7 @@ router.post('/bans', async (req, res) => {
     }
 });
 
-router.patch('/bans/:id', async (req, res) => {
+router.patch('/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     const { ban_character_1_id, ban_character_2_id } = req.body;
 
@@ -152,7 +152,7 @@ router.patch('/bans/:id', async (req, res) => {
     }
 });
 
-router.delete('/bans/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
     const id = parseInt(req.params.id);
 
     knex('bans')
